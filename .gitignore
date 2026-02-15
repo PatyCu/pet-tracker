@@ -47,5 +47,6 @@ coverage/
 # ESLint
 .eslintcache
 
-# Claude Code local context
-.claude/claude.local.md
+# local AI collaboration tools
+.claude/
+.prompts/
