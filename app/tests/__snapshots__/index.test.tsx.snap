@@ -1,38 +1,16 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HomeScreen matches snapshot 1`] = `
 <View
-  style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "#fff",
-      "flex": 1,
-      "justifyContent": "center",
-      "padding": 24,
-    }
-  }
+  className="flex-1 items-center justify-center bg-white p-6"
 >
   <Text
-    style={
-      {
-        "color": "#333",
-        "fontSize": 32,
-        "fontWeight": "700",
-        "marginBottom": 12,
-      }
-    }
+    className="text-3xl font-bold text-gray-800 mb-3"
   >
     Pet Tracker
   </Text>
   <Text
-    style={
-      {
-        "color": "#666",
-        "fontSize": 16,
-        "lineHeight": 24,
-        "textAlign": "center",
-      }
-    }
+    className="text-base text-gray-500 text-center leading-6"
   >
     Track symptoms and changes in your pet's health
   </Text>

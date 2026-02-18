@@ -67,11 +67,19 @@ pnpm run test:e2e:ios       # Run E2E tests on iOS simulator
 pnpm run test:e2e:android   # Run E2E tests on Android emulator
 ```
 
+## Styling
+
+- **NativeWind v4** provides Tailwind CSS utility classes via `className` prop on all platforms
+- Config lives in `tailwind.config.js` (root); global styles in `global.css`
+- `global.css` is imported once in `app/_layout.tsx` — do not import it elsewhere
+- Use `className` for styling; avoid mixing `className` and `style` on the same element
+- Run `pnpm start --clear` if styles don't appear after config changes (Metro cache)
+
 ## Conventions
 
 - **Components:** One component per file, named exports for non-screen components
 - **Screens:** Default exports in `app/` directory (Expo Router convention)
-- **Styles:** Co-located StyleSheet.create at bottom of component files
+- **Styles:** NativeWind `className` prop with Tailwind utilities
 - **Types:** Shared types in `src/types/`, component-specific types co-located
 - **Path aliases:** `@/*` maps to `src/*`
 
@@ -136,6 +144,14 @@ All major decisions are documented in [docs/ADRs/](docs/ADRs/):
 - [002 - Web Platform](docs/ADRs/002-web-platform.md)
 - [003 - Testing Framework](docs/ADRs/003-testing-framework.md)
 - [004 - E2E Testing](docs/ADRs/004-e2e-testing.md)
+- [005 - Styling NativeWind](docs/ADRs/005-styling-nativewind.md)
+
+## Debugging Approach
+
+- **Try the simplest fix first** before deep-diving into version checks, exports, or bundle analysis
+- For blank pages / missing styles on web: start with `pnpm start --clear` (Metro cache) or `npx expo install --fix` (version mismatches)
+- Only escalate to investigating configs, bundle output, or serving builds if the quick fixes don't resolve it
+- Avoid over-investigation — ask the user to verify after each simple fix before going deeper
 
 ## Agent Collaboration Files
 
