@@ -2,38 +2,65 @@
 
 ## Project Overview
 
-Pet Tracker is a React Native (Expo) mobile app for tracking symptoms and changes in pet health. Built with TypeScript in strict mode. Runs on iOS, Android, and web.
+Pet Tracker is a full-stack monorepo application for tracking symptoms and changes in pet health. Consists of a React Native (Expo) mobile app and a Node.js (Express) backend API. Built with TypeScript in strict mode. Mobile app runs on iOS, Android, and web.
 
 ## Tech Stack
+
+### Mobile App (`apps/mobile/`)
 
 - **Framework:** React Native with Expo SDK 54 (managed workflow)
 - **Language:** TypeScript (strict mode)
 - **Navigation:** Expo Router v6 (file-based routing)
-- **Package Manager:** pnpm
-- **Linting:** ESLint 8 + Prettier
+- **Styling:** NativeWind v4 (Tailwind CSS)
 - **Unit/Component Testing:** Jest 29 + React Testing Library
 - **E2E Testing:** Detox 20 (gray-box, TypeScript)
 - **Web:** Metro + react-native-web
+
+### Backend API (`apps/api/`)
+
+- **Framework:** Node.js + Express
+- **Language:** TypeScript (strict mode)
+- **ORM:** Prisma
+- **Database:** PostgreSQL (via Supabase)
+
+### Monorepo
+
+- **Package Manager:** pnpm workspaces
+- **Shared Types:** `packages/types/`
+- **Linting:** ESLint 8 + Prettier
 - **Git hooks:** husky + lint-staged
 
 ## Project Structure
 
 ```
 pet-tracker/
-├── app/                  # Expo Router pages (file-based routing)
-│   ├── _layout.tsx       # Root layout
-│   ├── index.tsx         # Home screen
-│   └── tests/            # Unit tests for screens
-├── src/
-│   ├── components/       # Reusable UI components
-│   ├── constants/        # App-wide constants and config
-│   ├── hooks/            # Custom React hooks
-│   ├── types/            # Shared TypeScript types
-│   └── utils/            # Utility functions
-├── e2e/                  # Detox E2E tests (TypeScript)
-│   ├── jest.config.js    # Separate Jest config for E2E
-│   └── *.test.ts         # E2E test files
-├── assets/               # Images, fonts, icons
+├── apps/
+│   ├── mobile/           # React Native + Expo app
+│   │   ├── app/          # Expo Router pages (file-based routing)
+│   │   │   ├── _layout.tsx   # Root layout
+│   │   │   ├── index.tsx     # Home screen
+│   │   │   └── tests/        # Unit tests for screens
+│   │   ├── src/
+│   │   │   ├── components/   # Reusable UI components
+│   │   │   ├── constants/    # App-wide constants and config
+│   │   │   ├── hooks/        # Custom React hooks
+│   │   │   ├── types/        # Mobile-specific types
+│   │   │   └── utils/        # Utility functions
+│   │   ├── e2e/          # Detox E2E tests (TypeScript)
+│   │   ├── assets/       # Images, fonts, icons
+│   │   └── package.json  # Mobile app dependencies
+│   └── api/              # Node.js + Express backend
+│       ├── src/
+│       │   ├── lib/      # Shared utilities (Prisma client)
+│       │   └── index.ts  # Express server entry point
+│       ├── prisma/
+│       │   └── schema.prisma  # Database schema
+│       └── package.json  # API dependencies
+├── packages/
+│   └── types/            # Shared TypeScript types
+│       ├── src/
+│       │   └── index.ts  # Type exports
+│       └── package.json
 ├── docs/ADRs/            # Architecture Decision Records
 └── .prompts/             # Reusable prompt templates for Claude Code
 ```
@@ -41,47 +68,52 @@ pet-tracker/
 ## Common Commands
 
 ```bash
-# Development
-pnpm start              # Start Expo dev server
-pnpm run ios            # Start on iOS simulator
-pnpm run android        # Start on Android emulator
-pnpm run web            # Start web version
+# Development - Workspace level (run from root)
+pnpm dev                # Start both API and mobile app concurrently
+pnpm dev:mobile         # Start mobile app only
+pnpm dev:api            # Start API only
 
-# Code quality
-pnpm run lint           # Run ESLint
-pnpm run lint:fix       # Run ESLint with auto-fix
-pnpm run format         # Format code with Prettier
-pnpm run format:check   # Check formatting
-pnpm run typecheck      # Run TypeScript type checking
+# Development - Mobile specific
+pnpm --filter @pet-tracker/mobile start      # Start Expo dev server
+pnpm --filter @pet-tracker/mobile ios        # Start on iOS simulator
+pnpm --filter @pet-tracker/mobile android    # Start on Android emulator
+pnpm --filter @pet-tracker/mobile web        # Start web version
 
-# Unit / Component testing
-pnpm test               # Run all unit/component tests
-pnpm test:watch         # Run tests in watch mode
-pnpm test:coverage      # Run tests with coverage report
-pnpm test:ci            # Run tests in CI mode
+# Development - API specific
+pnpm --filter @pet-tracker/api dev           # Start API dev server
+pnpm --filter @pet-tracker/api prisma:push   # Push schema to database
+pnpm --filter @pet-tracker/api prisma:studio # Open Prisma Studio
 
-# E2E testing (Detox) — requires native builds
-pnpm run build:e2e:ios      # Build iOS app for E2E
-pnpm run build:e2e:android  # Build Android app for E2E
-pnpm run test:e2e:ios       # Run E2E tests on iOS simulator
-pnpm run test:e2e:android   # Run E2E tests on Android emulator
+# Code quality (all workspaces)
+pnpm lint               # Run ESLint on all workspaces
+pnpm format             # Format code with Prettier on all workspaces
+pnpm typecheck          # Run TypeScript type checking on all workspaces
+pnpm test               # Run tests on all workspaces
+
+# Mobile specific testing
+pnpm --filter @pet-tracker/mobile test              # Run unit/component tests
+pnpm --filter @pet-tracker/mobile test:watch        # Run tests in watch mode
+pnpm --filter @pet-tracker/mobile test:coverage     # Run tests with coverage
+pnpm --filter @pet-tracker/mobile build:e2e:ios     # Build iOS app for E2E
+pnpm --filter @pet-tracker/mobile test:e2e:ios      # Run E2E tests on iOS
 ```
 
 ## Styling
 
 - **NativeWind v4** provides Tailwind CSS utility classes via `className` prop on all platforms
-- Config lives in `tailwind.config.js` (root); global styles in `global.css`
-- `global.css` is imported once in `app/_layout.tsx` — do not import it elsewhere
+- Config lives in `apps/mobile/tailwind.config.js`; global styles in `apps/mobile/global.css`
+- `global.css` is imported once in `apps/mobile/app/_layout.tsx` — do not import it elsewhere
 - Use `className` for styling; avoid mixing `className` and `style` on the same element
-- Run `pnpm start --clear` if styles don't appear after config changes (Metro cache)
+- Run `pnpm --filter @pet-tracker/mobile start --clear` if styles don't appear after config changes (Metro cache)
 
 ## Conventions
 
 - **Components:** One component per file, named exports for non-screen components
-- **Screens:** Default exports in `app/` directory (Expo Router convention)
+- **Screens:** Default exports in `apps/mobile/app/` directory (Expo Router convention)
 - **Styles:** NativeWind `className` prop with Tailwind utilities
-- **Types:** Shared types in `src/types/`, component-specific types co-located
-- **Path aliases:** `@/*` maps to `src/*`
+- **Types:** Cross-app types in `packages/types/`, app-specific types in respective `src/types/`
+- **Path aliases (mobile):** `@/*` maps to `apps/mobile/src/*`
+- **Workspaces:** Use `pnpm --filter <workspace-name>` for workspace-specific commands
 
 ## Testing Conventions
 
@@ -107,7 +139,7 @@ describe("MyComponent", () => {
 
 ### E2E Tests (Detox)
 
-- Test files live in `e2e/` directory as `*.test.ts`
+- Test files live in `apps/mobile/e2e/` directory as `*.test.ts`
 - Use `testID` props on components for reliable selectors
 - Prefer `by.id()` for interaction targets, `by.text()` for content assertions
 - One test file per user flow or screen
@@ -130,9 +162,9 @@ describe("Home Screen", () => {
 ### Detox Setup (First-Time)
 
 1. Install Xcode (iOS) or Android Studio (Android)
-2. Generate native projects: `npx expo prebuild`
-3. Build for E2E: `pnpm run build:e2e:ios` or `pnpm run build:e2e:android`
-4. Run tests: `pnpm run test:e2e:ios` or `pnpm run test:e2e:android`
+2. Generate native projects: `cd apps/mobile && npx expo prebuild`
+3. Build for E2E: `pnpm --filter @pet-tracker/mobile build:e2e:ios` or `pnpm --filter @pet-tracker/mobile build:e2e:android`
+4. Run tests: `pnpm --filter @pet-tracker/mobile test:e2e:ios` or `pnpm --filter @pet-tracker/mobile test:e2e:android`
 
 Alternatively, use EAS Build profiles `detox-ios` / `detox-android` for cloud builds.
 
@@ -140,10 +172,10 @@ Alternatively, use EAS Build profiles `detox-ios` / `detox-android` for cloud bu
 
 All major decisions are documented in [docs/ADRs/](docs/ADRs/):
 
-- [001 - Tech Stack](docs/ADRs/001-tech-stack.md)
-- [002 - Web Platform](docs/ADRs/002-web-platform.md)
-- [003 - Testing Framework](docs/ADRs/003-testing-framework.md)
-- [004 - E2E Testing](docs/ADRs/004-e2e-testing.md)
+- [001 - Tech Stack](docs/ADRs/006-tech-stack.md)
+- [002 - Monorepo Structure](docs/ADRs/007-monorepo-structure.md)
+- [003 - Database Strategy](docs/ADRs/008-database-strategy.md)
+- [004 - API Design](docs/ADRs/009-api-design.md)
 - [005 - Styling NativeWind](docs/ADRs/005-styling-nativewind.md)
 
 ## Debugging Approach

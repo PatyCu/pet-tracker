@@ -8,6 +8,7 @@ App to track symptoms and changes in your pet's health.
 - [pnpm](https://pnpm.io/) v9+ (`npm install -g pnpm`)
 - [Expo Go](https://expo.dev/go) app on your phone (for physical device testing)
 - iOS Simulator (macOS) or Android Emulator (optional)
+- PostgreSQL database (via Supabase free tier)
 
 ## Getting Started
 
@@ -15,47 +16,79 @@ App to track symptoms and changes in your pet's health.
 # Install dependencies
 pnpm install
 
-# Start the development server
-pnpm start
+# Set up API environment
+echo "DATABASE_URL=your_supabase_connection_string" > apps/api/.env
 
-# Run on specific platform
-pnpm run ios        # iOS Simulator
-pnpm run android    # Android Emulator
-pnpm run web        # Web browser
+# Generate Prisma client
+pnpm --filter @pet-tracker/api exec prisma generate
+
+# Push database schema
+pnpm --filter @pet-tracker/api prisma:push
+
+# Start both API and mobile app
+pnpm dev
+
+# Or start individually
+pnpm dev:mobile    # Mobile app only
+pnpm dev:api       # API only
 ```
 
 ## Development
 
 ```bash
-# Lint code
-pnpm run lint
-pnpm run lint:fix
+# Run mobile app on specific platform
+pnpm --filter @pet-tracker/mobile ios        # iOS Simulator
+pnpm --filter @pet-tracker/mobile android    # Android Emulator
+pnpm --filter @pet-tracker/mobile web        # Web browser
 
-# Format code
-pnpm run format
-pnpm run format:check
+# Lint code (all workspaces)
+pnpm lint
 
-# Type check
-pnpm run typecheck
+# Format code (all workspaces)
+pnpm format
+
+# Type check (all workspaces)
+pnpm typecheck
+
+# Run tests (all workspaces)
+pnpm test
 ```
 
 ## Project Structure
 
 ```
-app/              → Expo Router pages (file-based routing)
-src/components/   → Reusable UI components
-src/constants/    → App constants and configuration
-src/hooks/        → Custom React hooks
-src/types/        → Shared TypeScript types
-src/utils/        → Utility functions
-docs/ADRs/        → Architecture Decision Records
+apps/
+├── mobile/          → React Native + Expo app
+│   ├── app/         → Expo Router pages (file-based routing)
+│   ├── src/         → Mobile app source code
+│   └── e2e/         → Detox E2E tests
+└── api/             → Node.js + Express backend
+    ├── src/         → API source code
+    └── prisma/      → Database schema and migrations
+packages/
+└── types/           → Shared TypeScript types
+docs/ADRs/           → Architecture Decision Records
 ```
 
 ## Tech Stack
 
+### Mobile App
+
 - React Native + Expo SDK 54
 - TypeScript (strict mode)
-- Expo Router (file-based navigation)
-- ESLint + Prettier
+- Expo Router v6 (file-based navigation)
+- NativeWind v4 (Tailwind CSS)
+- Jest + React Testing Library + Detox
 
-See [docs/ADRs/001-tech-stack.md](docs/ADRs/001-tech-stack.md) for detailed rationale.
+### Backend
+
+- Node.js + Express
+- Prisma ORM
+- PostgreSQL (via Supabase)
+
+### Monorepo
+
+- pnpm workspaces
+- Shared types package
+
+See [docs/ADRs/](docs/ADRs/) for detailed architecture decisions.
