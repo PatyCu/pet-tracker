@@ -194,10 +194,6 @@ All major decisions are documented in [docs/ADRs/](docs/ADRs/):
 1. Run `pnpm lint && pnpm typecheck` to verify code
 2. Run `git add <files>` to stage changes
 
-**After every commit:**
-
-- Run `git show HEAD --stat` to verify files are included
-
 **Commit messages:**
 
 - Format: `<action> <what>` (one line only)
