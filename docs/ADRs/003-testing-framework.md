@@ -1,6 +1,6 @@
 # ADR 003: Testing Framework
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-007](./007-monorepo-structure.md)
 **Date:** 2026-02-15
 
 ## Context

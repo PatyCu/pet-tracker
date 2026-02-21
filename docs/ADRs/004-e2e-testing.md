@@ -1,6 +1,6 @@
 # ADR 004: E2E Testing Tool
 
-**Status:** Superseded (Maestro → Detox)
+**Status:** Superseded by [ADR-007](./007-monorepo-structure.md)
 **Date:** 2026-02-15
 **Updated:** 2026-02-15
 
