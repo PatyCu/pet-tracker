@@ -187,6 +187,13 @@ All major decisions are documented in [docs/ADRs/](docs/ADRs/):
 
 ## Git & PR Workflow
 
+### Commit Timing
+
+- Do NOT commit after every change or sub-task
+- Only commit when explicitly told "commit" or "done, commit this"
+- During iterative feedback (me reviewing → you adjusting), keep changes unstaged
+- When I approve the final result, then stage + commit
+
 ### Commit Strategy
 
 **Before every commit:**
