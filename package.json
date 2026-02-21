@@ -8,7 +8,7 @@
     "dev:api": "pnpm --filter @pet-tracker/api dev",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
+    "test": "pnpm -r test --if-present",
     "format": "pnpm -r format",
     "prepare": "husky"
   },
