@@ -1,6 +1,6 @@
 # ADR 002: Web Platform Setup
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-007](./007-monorepo-structure.md)
 **Date:** 2026-02-15
 
 ## Context

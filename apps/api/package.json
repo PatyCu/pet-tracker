@@ -7,6 +7,8 @@
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "test": "echo \"No API tests yet\"",
     "prisma:push": "prisma db push",
     "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
@@ -14,7 +16,8 @@
   },
   "dependencies": {
     "express": "^4.21.0",
-    "@prisma/client": "^6.0.0"
+    "@prisma/client": "^6.0.0",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "prisma": "^6.0.0",
@@ -22,9 +25,11 @@
     "ts-node-dev": "^2.0.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
+    "@types/cors": "^2.8.17",
     "eslint": "^8.57.1",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
-    "@typescript-eslint/parser": "^8.55.0"
+    "@typescript-eslint/parser": "^8.55.0",
+    "prettier": "^3.8.1"
   },
   "lint-staged": {
     "*.ts": [

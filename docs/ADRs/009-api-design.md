@@ -1,4 +1,4 @@
-# ADR 004 - API Design
+# ADR 009 - API Design
 
 **Date:** 2026-02-18
 **Status:** Accepted

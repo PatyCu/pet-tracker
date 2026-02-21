@@ -1,4 +1,4 @@
-# ADR 003 - Database Strategy
+# ADR 008 - Database Strategy
 
 **Date:** 2026-02-18
 **Status:** Accepted

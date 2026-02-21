@@ -1,4 +1,4 @@
-# ADR 001 - Tech Stack
+# ADR 006 - Tech Stack
 
 **Date:** 2026-02-18
 **Status:** Accepted

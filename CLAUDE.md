@@ -172,11 +172,11 @@ Alternatively, use EAS Build profiles `detox-ios` / `detox-android` for cloud bu
 
 All major decisions are documented in [docs/ADRs/](docs/ADRs/):
 
-- [001 - Tech Stack](docs/ADRs/006-tech-stack.md)
-- [002 - Monorepo Structure](docs/ADRs/007-monorepo-structure.md)
-- [003 - Database Strategy](docs/ADRs/008-database-strategy.md)
-- [004 - API Design](docs/ADRs/009-api-design.md)
 - [005 - Styling NativeWind](docs/ADRs/005-styling-nativewind.md)
+- [006 - Tech Stack](docs/ADRs/006-tech-stack.md)
+- [007 - Monorepo Structure](docs/ADRs/007-monorepo-structure.md)
+- [008 - Database Strategy](docs/ADRs/008-database-strategy.md)
+- [009 - API Design](docs/ADRs/009-api-design.md)
 
 ## Debugging Approach
 
@@ -184,6 +184,28 @@ All major decisions are documented in [docs/ADRs/](docs/ADRs/):
 - For blank pages / missing styles on web: start with `pnpm start --clear` (Metro cache) or `npx expo install --fix` (version mismatches)
 - Only escalate to investigating configs, bundle output, or serving builds if the quick fixes don't resolve it
 - Avoid over-investigation — ask the user to verify after each simple fix before going deeper
+
+## Git & PR Workflow
+
+### Commit Strategy
+
+- **One commit per PR comment** — When addressing code review feedback, group all file changes that address a single comment into one commit
+  - Example: Comment about "ADR heading mismatches" affecting 4 files → 1 commit with all 4 files
+  - Don't split into separate commits per file unless they address different comments
+- **Concise commit messages** — One-line summaries only, no multi-paragraph explanations
+  - Format: `<action> <what was fixed>`
+  - Good: `Fix ADR heading numbers to match filenames`
+  - Bad: `Fix ADR 006 heading\n\nThis addresses the PR comment about...` (too verbose)
+- **Always include Co-Authored-By** tag for AI pair programming:
+  ```
+  Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+  ```
+
+### PR Comments
+
+- Fetch and address PR comments using `/pr-comments` command
+- Create atomic commits that map 1:1 to review feedback
+- This makes it easy to review what was addressed and track changes
 
 ## Agent Collaboration Files
 

@@ -1,4 +1,4 @@
-# ADR 002 - Monorepo Structure
+# ADR 007 - Monorepo Structure
 
 **Date:** 2026-02-18
 **Status:** Accepted
