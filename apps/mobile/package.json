@@ -23,6 +23,7 @@
     "test:e2e:android": "detox test --configuration android.emu.debug"
   },
   "dependencies": {
+    "@pet-tracker/types": "workspace:*",
     "@expo/metro-runtime": "^6.1.2",
     "expo": "~54.0.33",
     "expo-constants": "^18.0.13",

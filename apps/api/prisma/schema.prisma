@@ -12,4 +12,17 @@ model User {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  pets      Pet[]
+}
+
+model Pet {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  species     String
+  breed       String?
+  dateOfBirth DateTime?
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
