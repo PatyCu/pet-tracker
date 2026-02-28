@@ -1,10 +1,14 @@
 import { render, screen } from "@testing-library/react-native";
 import HomeScreen from "../index";
 
+jest.mock("expo-router", () => ({
+  useRouter: () => ({ push: jest.fn() }),
+}));
+
 describe("HomeScreen", () => {
   it("renders the app title", () => {
     render(<HomeScreen />);
-    expect(screen.getByText("Pet Tracker")).toBeOnTheScreen();
+    expect(screen.getByText(/Pet Tracker/)).toBeOnTheScreen();
   });
 
   it("renders the subtitle", () => {
