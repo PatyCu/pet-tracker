@@ -1,224 +1,85 @@
 # Pet Tracker - Claude Code Guide
 
-## Project Overview
+## Agent Instructions
 
-Pet Tracker is a full-stack monorepo application for tracking symptoms and changes in pet health. Consists of a React Native (Expo) mobile app and a Node.js (Express) backend API. Built with TypeScript in strict mode. Mobile app runs on iOS, Android, and web.
+- Before considering any task complete, verify the project builds and runs without errors and that all quality gates pass.
+- Whenever instructions for installing or running the app change, update `README.md` to reflect those changes.
 
-## Tech Stack
+### Core Principles
 
-### Mobile App (`apps/mobile/`)
+- **Simplicity First:** Make every change as simple as possible. Impact minimal code.
+- **No Laziness:** Find root causes. No temporary fixes. Senior developer standards.
+- **Minimal impact:** Changes should only touch what's necessary. No side-effects. Avoid introducing bugs.
 
-- **Framework:** React Native with Expo SDK 54 (managed workflow)
-- **Language:** TypeScript (strict mode)
-- **Navigation:** Expo Router v6 (file-based routing)
-- **Styling:** NativeWind v4 (Tailwind CSS)
-- **Unit/Component Testing:** Jest 29 + React Testing Library
-- **E2E Testing:** Detox 20 (gray-box, TypeScript)
-- **Web:** Metro + react-native-web
+### Workflow Orchestration
 
-### Backend API (`apps/api/`)
+#### 1. Plan Mode Default
 
-- **Framework:** Node.js + Express
-- **Language:** TypeScript (strict mode)
-- **ORM:** Prisma
-- **Database:** PostgreSQL (via Supabase)
+- Write a plan first for ANY non-trivial task (+3 steps or architectural decisions), and wait for feedback or approval before starting to implement
+- If something goes sideways, STOP and re-plan immediately - don't keep pushing unless I explicitly tell you to iterate until you fix
+- Use plan mode for verification steps, not just building
+- Write detailed specs upfront to reduce ambiguity
 
-### Monorepo
+#### 2. Subagent strategy
 
-- **Package Manager:** pnpm workspaces
-- **Shared Types:** `packages/types/`
-- **Linting:** ESLint 8 + Prettier
-- **Git hooks:** husky + lint-staged
+- For complex multi-step tasks, use subagents for specialized tasks to keep main context window clean
+- Be always mindful of cost, always balance token consumption and context bloating
 
-## Project Structure
+#### 3. Self-improvement Loop
 
-```
-pet-tracker/
-├── apps/
-│   ├── mobile/           # React Native + Expo app
-│   │   ├── app/          # Expo Router pages (file-based routing)
-│   │   │   ├── _layout.tsx   # Root layout
-│   │   │   ├── index.tsx     # Home screen
-│   │   │   └── tests/        # Unit tests for screens
-│   │   ├── src/
-│   │   │   ├── components/   # Reusable UI components
-│   │   │   ├── constants/    # App-wide constants and config
-│   │   │   ├── hooks/        # Custom React hooks
-│   │   │   ├── types/        # Mobile-specific types
-│   │   │   └── utils/        # Utility functions
-│   │   ├── e2e/          # Detox E2E tests (TypeScript)
-│   │   ├── assets/       # Images, fonts, icons
-│   │   └── package.json  # Mobile app dependencies
-│   └── api/              # Node.js + Express backend
-│       ├── src/
-│       │   ├── lib/      # Shared utilities (Prisma client)
-│       │   └── index.ts  # Express server entry point
-│       ├── prisma/
-│       │   └── schema.prisma  # Database schema
-│       └── package.json  # API dependencies
-├── packages/
-│   └── types/            # Shared TypeScript types
-│       ├── src/
-│       │   └── index.ts  # Type exports
-│       └── package.json
-├── docs/ADRs/            # Architecture Decision Records
-└── .prompts/             # Reusable prompt templates for Claude Code
-```
+- **After every task is complete:** review all corrections or feedback given during the task and update "Agent Lessons" — without being asked. This is a mandatory step, not optional.
+- Rules must be **generalized patterns**, not implementation-specific rules — ask "would this apply to a different file or context?" before writing. If no, abstract it up.
+- Favor one-liners. Refactor for clarity after each addition.
+- Review lessons at session start for relevant context.
 
-## Common Commands
+#### 4. Verification before Done
 
-```bash
-# Development - Workspace level (run from root)
-pnpm dev                # Start both API and mobile app concurrently
-pnpm dev:mobile         # Start mobile app only
-pnpm dev:api            # Start API only
+- Never mark a task complete without proving it works
+- Diff behavior between main and your changes when relevant
+- Ask yourself: "Would a staff engineer approve this?"
+- Run tests, check logs, demonstrate correctness
+- For any code change (`.ts`, `.tsx`, `.js`): run `pnpm lint && pnpm typecheck` as the minimum quality gate — skip only for pure docs/text/style changes with no logic touched
+- Only after the task is demonstrably done and verified, update any relevant documentation
+- After documentation is updated, commit changes to local using the git-commit skill `.agents/skills/git-commit/SKILL.md`
 
-# Development - Mobile specific
-pnpm --filter @pet-tracker/mobile start      # Start Expo dev server
-pnpm --filter @pet-tracker/mobile ios        # Start on iOS simulator
-pnpm --filter @pet-tracker/mobile android    # Start on Android emulator
-pnpm --filter @pet-tracker/mobile web        # Start web version
+#### 5. Keep it Simple, Keep it elegant
 
-# Development - API specific
-pnpm --filter @pet-tracker/api dev           # Start API dev server
-pnpm --filter @pet-tracker/api prisma:push   # Push schema to database
-pnpm --filter @pet-tracker/api prisma:studio # Open Prisma Studio
+- Favor simplicity, avoid overengineering unless explicitly required
+- Challenge your own work before presenting it
+- For complex changes: challenge yourself to find a simpler, more elegant solution. Iterate until you find an elegant solution.
+- For Mobile code, follow React Native and Expo best practices in `.agents/skills/vercel-react-native-skills/`.
 
-# Code quality (all workspaces)
-pnpm lint               # Run ESLint on all workspaces
-pnpm format             # Format code with Prettier on all workspaces
-pnpm typecheck          # Run TypeScript type checking on all workspaces
-pnpm test               # Run tests on all workspaces
+#### 6. Autonomous Bug Fixing
 
-# Mobile specific testing
-pnpm --filter @pet-tracker/mobile test              # Run unit/component tests
-pnpm --filter @pet-tracker/mobile test:watch        # Run tests in watch mode
-pnpm --filter @pet-tracker/mobile test:coverage     # Run tests with coverage
-pnpm --filter @pet-tracker/mobile build:e2e:ios     # Build iOS app for E2E
-pnpm --filter @pet-tracker/mobile test:e2e:ios      # Run E2E tests on iOS
-```
+- When given a bug report: just fix it. Don't ask for handholding
+- If the bug surfaced a test gap, add a new test
+- Point at logs, errors, failing tests - then resolve them
 
-## Styling
+#### 7. PR Reviews
 
-- **NativeWind v4** provides Tailwind CSS utility classes via `className` prop on all platforms
-- Config lives in `apps/mobile/tailwind.config.js`; global styles in `apps/mobile/global.css`
-- `global.css` is imported once in `apps/mobile/app/_layout.tsx` — do not import it elsewhere
-- Use `className` for styling; avoid mixing `className` and `style` on the same element
-- Run `pnpm --filter @pet-tracker/mobile start --clear` if styles don't appear after config changes (Metro cache)
+- When asked to address comments in a PR after a 3rd party's review (human on agent based), create a plan for yourself where each comment is a separate task
+- Do not jump to the next comment / task until the current task can be considered done (verified, documentation updated, one commit per comment)
+- Example: 4 ADR files addressing one comment → 1 commit with all 4
 
-## Conventions
-
-- **Components:** One component per file, named exports for non-screen components
-- **Screens:** Default exports in `apps/mobile/app/` directory (Expo Router convention)
-- **Styles:** NativeWind `className` prop with Tailwind utilities
-- **Types:** Cross-app types in `packages/types/`, app-specific types in respective `src/types/`
-- **Path aliases (mobile):** `@/*` maps to `apps/mobile/src/*`
-- **Workspaces:** Use `pnpm --filter <workspace-name>` for workspace-specific commands
-
-## Testing Conventions
-
-### Unit / Component Tests (Jest + RTL)
+#### 8. Testing
 
 - Test files live in `tests/` directories adjacent to source files
-- Named `[filename].test.ts(x)`
 - Follow the **testing pyramid**: more unit tests, fewer integration, minimal E2E
 - Test **behavior and public APIs**, not implementation details
 - Use React Testing Library queries (getByText, getByRole) over testID when possible
 
-```tsx
-import { render, screen } from "@testing-library/react-native";
-import MyComponent from "../MyComponent";
+### Task Management for complex, multi-step prompts
 
-describe("MyComponent", () => {
-  it("renders expected content", () => {
-    render(<MyComponent />);
-    expect(screen.getByText("Expected text")).toBeOnTheScreen();
-  });
-});
-```
+1. **Plan First:** Write plan to `.claude/prompts/to-do.md` with checkable items
+2. **Verify Plan:** Check in before starting implementation
+3. **Track Progress:** Mark items complete as you go
+4. **Explain Changes:** High-level summary at each step
+5. **Document Results:** Add review section to `.claude/prompts/to-do.md`
+6. **Capture Lessons:** Update Agent Lessons at the end of `CLAUDE.md` after corrections
 
-### E2E Tests (Detox)
+## Agent Lessons
 
-- Test files live in `apps/mobile/e2e/` directory as `*.test.ts`
-- Use `testID` props on components for reliable selectors
-- Prefer `by.id()` for interaction targets, `by.text()` for content assertions
-- One test file per user flow or screen
-- Detox requires native builds — cannot run against Expo Go
+Rule-based, lessons learned by the Agent in a self-improvement iteration loop.
 
-```ts
-import { by, device, element, expect } from "detox";
-
-describe("Home Screen", () => {
-  beforeAll(async () => {
-    await device.launchApp({ newInstance: true });
-  });
-
-  it("should display the title", async () => {
-    await expect(element(by.text("Pet Tracker"))).toBeVisible();
-  });
-});
-```
-
-### Detox Setup (First-Time)
-
-1. Install Xcode (iOS) or Android Studio (Android)
-2. Generate native projects: `cd apps/mobile && npx expo prebuild`
-3. Build for E2E: `pnpm --filter @pet-tracker/mobile build:e2e:ios` or `pnpm --filter @pet-tracker/mobile build:e2e:android`
-4. Run tests: `pnpm --filter @pet-tracker/mobile test:e2e:ios` or `pnpm --filter @pet-tracker/mobile test:e2e:android`
-
-Alternatively, use EAS Build profiles `detox-ios` / `detox-android` for cloud builds.
-
-## Architecture Decisions
-
-All major decisions are documented in [docs/ADRs/](docs/ADRs/):
-
-- [005 - Styling NativeWind](docs/ADRs/005-styling-nativewind.md)
-- [006 - Tech Stack](docs/ADRs/006-tech-stack.md)
-- [007 - Monorepo Structure](docs/ADRs/007-monorepo-structure.md)
-- [008 - Database Strategy](docs/ADRs/008-database-strategy.md)
-- [009 - API Design](docs/ADRs/009-api-design.md)
-
-## Debugging Approach
-
-- **Try the simplest fix first** before deep-diving into version checks, exports, or bundle analysis
-- For blank pages / missing styles on web: start with `pnpm start --clear` (Metro cache) or `npx expo install --fix` (version mismatches)
-- Only escalate to investigating configs, bundle output, or serving builds if the quick fixes don't resolve it
-- Avoid over-investigation — ask the user to verify after each simple fix before going deeper
-
-## Git & PR Workflow
-
-### Commit Timing
-
-- Do NOT commit after every change or sub-task
-- Only commit when explicitly told "commit" or "done, commit this"
-- During iterative feedback (me reviewing → you adjusting), keep changes unstaged
-- When I approve the final result, then stage + commit
-
-### Commit Strategy
-
-**Before every commit:**
-
-1. Run `pnpm lint && pnpm typecheck` to verify code
-2. Run `git add <files>` to stage changes
-
-**Commit messages:**
-
-- Format: `<action> <what>` (one line only)
-- Example: `Fix ADR heading numbers to match filenames`
-- Always include:
-  ```
-  Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-  ```
-
-**PR review comments:**
-
-- Group files by comment: one commit per comment, not per file
-- Example: 4 ADR files addressing one comment → 1 commit with all 4
-
-## Agent Collaboration Files
-
-| File                      | Purpose                                          | Git tracked?    |
-| ------------------------- | ------------------------------------------------ | --------------- |
-| `CLAUDE.md`               | Project overview and conventions for Claude Code | Yes             |
-| `.claude/claude.local.md` | Session-specific context and notes               | No (gitignored) |
-| `.prompts/`               | Reusable prompt templates                        | Yes             |
+- **Cross-platform fixes:** Before applying a fix, understand the original intent of the code — removing or changing styles/props to resolve a crash may regress other platforms. Always verify the fix holds across all targets (web, iOS, Android).
+- **Stop on repeated failure:** If a command fails twice with the same root cause, stop and diagnose — don't iterate through variations of the same broken approach.

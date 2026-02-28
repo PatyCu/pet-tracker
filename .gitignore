@@ -50,3 +50,5 @@ coverage/
 # local AI collaboration tools
 .claude/
 .prompts/
+.agents/
+skills-lock.json
