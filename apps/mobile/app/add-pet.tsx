@@ -3,8 +3,7 @@ import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { CreatePetInput } from "@pet-tracker/types";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000";
+import { API_URL } from "@/lib/api";
 
 export default function AddPetScreen() {
   const router = useRouter();

@@ -6,6 +6,11 @@ import { DEFAULT_USER_ID } from "../constants";
 export async function createPet(req: Request, res: Response): Promise<void> {
   const { name, species, breed, dateOfBirth } = req.body as CreatePetInput;
 
+  if (!name || !species) {
+    res.status(400).json({ error: "name and species are required" });
+    return;
+  }
+
   const pet = await prisma.pet.create({
     data: {
       userId: DEFAULT_USER_ID,

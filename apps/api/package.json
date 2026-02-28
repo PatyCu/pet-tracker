@@ -8,11 +8,14 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"**/*.{ts,json,md}\"",
-    "test": "echo \"No API tests yet\"",
+    "test": "vitest run",
     "prisma:push": "prisma db push",
     "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
     "prisma:migrate": "prisma migrate dev"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@pet-tracker/types": "workspace:*",
@@ -23,7 +26,12 @@
   "devDependencies": {
     "prisma": "^6.0.0",
     "typescript": "~5.9.2",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "vitest": "^2.0.0",
+    "supertest": "^7.0.0",
+    "@types/supertest": "^6.0.2",
+    "dotenv": "^16.0.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
     "@types/cors": "^2.8.17",
