@@ -34,11 +34,13 @@ export default function AddPetScreen() {
 
       if (response.status === 409) {
         const data = await response.json();
-        throw new Error(data.error ?? "A pet with that name already exists");
+        setError(data.error ?? "A pet with that name already exists");
+        return;
       }
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        setError(`Server error: ${response.status}`);
+        return;
       }
 
       router.back();
