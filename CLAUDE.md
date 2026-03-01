@@ -38,7 +38,10 @@
 - Diff behavior between main and your changes when relevant
 - Ask yourself: "Would a staff engineer approve this?"
 - Run tests, check logs, demonstrate correctness
-- For any code change (`.ts`, `.tsx`, `.js`): run `pnpm lint && pnpm typecheck` as the minimum quality gate — skip only for pure docs/text/style changes with no logic touched
+- For any code change (`.ts`, `.tsx`, `.js`): run `pnpm lint && pnpm typecheck && pnpm test` as the minimum quality gate — skip only for pure docs/text/style changes with no logic touched. For changes that affect the build output, also run pnpm build and confirm it succeeds.
+- For any code change: run `pnpm lint && pnpm typecheck && pnpm test` as the minimum quality gate.
+- For new features or bug fixes, also perform a runtime verification: start the server, make a real request (curl, a test script, or Expo dev client), and confirm the actual behavior matches the expected outcome.
+- Document the verification command or output as part of the task summary. Skip runtime verification only for pure refactors with full test coverage or for documentation changes.
 - Only after the task is demonstrably done and verified, update any relevant documentation
 - After documentation is updated, commit changes to local using the git-commit skill `.agents/skills/git-commit/SKILL.md`
 
@@ -67,6 +70,7 @@
 - Follow the **testing pyramid**: more unit tests, fewer integration, minimal E2E
 - Test **behavior and public APIs**, not implementation details
 - Use React Testing Library queries (getByText, getByRole) over testID when possible
+- New API endpoints always require tests. Controller unit tests at minimum, integration tests if the endopoint has non-trivial logic.
 
 ### Task Management for complex, multi-step prompts
 

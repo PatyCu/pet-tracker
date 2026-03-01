@@ -11,6 +11,14 @@ export async function createPet(req: Request, res: Response): Promise<void> {
     return;
   }
 
+  const existing = await prisma.pet.findUnique({
+    where: { userId_name: { userId: DEFAULT_USER_ID, name } },
+  });
+  if (existing) {
+    res.status(409).json({ error: "A pet with that name already exists" });
+    return;
+  }
+
   const pet = await prisma.pet.create({
     data: {
       userId: DEFAULT_USER_ID,

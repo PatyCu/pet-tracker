@@ -11,6 +11,10 @@ beforeAll(async () => {
     update: {},
     create: { id: "default-user", name: "Paty" },
   });
+  // Remove any pets left from previous test runs to ensure clean state
+  await prisma.pet.deleteMany({
+    where: { userId: "default-user", name: { in: ["Kiwi", "Dupes"] } },
+  });
 });
 
 afterAll(async () => {
@@ -39,5 +43,15 @@ describe("POST /api/v1/pets", () => {
     const res = await request(app).post("/api/v1/pets").send({ name: "Kiwi" });
 
     expect(res.status).toBe(400);
+  });
+
+  it("returns 409 when a pet with the same name already exists", async () => {
+    const first = await request(app).post("/api/v1/pets").send({ name: "Dupes", species: "Dog" });
+    expect(first.status).toBe(201);
+    createdPetIds.push(first.body.id as string);
+
+    const res = await request(app).post("/api/v1/pets").send({ name: "Dupes", species: "Dog" });
+    expect(res.status).toBe(409);
+    expect(res.body.error).toMatch(/already exists/i);
   });
 });
