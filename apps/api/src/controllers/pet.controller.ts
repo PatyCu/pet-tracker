@@ -3,6 +3,14 @@ import { CreatePetInput } from "@pet-tracker/types";
 import { prisma } from "../lib/prisma";
 import { DEFAULT_USER_ID } from "../constants";
 
+export async function listPets(_req: Request, res: Response): Promise<void> {
+  const pets = await prisma.pet.findMany({
+    where: { userId: DEFAULT_USER_ID },
+    orderBy: { createdAt: "asc" },
+  });
+  res.json(pets);
+}
+
 export async function createPet(req: Request, res: Response): Promise<void> {
   const { name, species, breed, dateOfBirth } = req.body as CreatePetInput;
 
