@@ -45,6 +45,18 @@
 - Only after the task is demonstrably done and verified, update any relevant documentation
 - After documentation is updated, commit changes to local using the git-commit skill `.agents/skills/git-commit/SKILL.md`
 
+**Mandatory done checklist — paste this in your response before closing any code task:**
+
+```
+## Done
+- [ ] lint + typecheck + tests pass (output shown)
+- [ ] runtime verified: <paste actual command output, curl response, or screenshot>
+- [ ] works on all target platforms affected by the change
+- [ ] documentation updated if needed
+```
+
+Skipping any item requires an explicit written justification.
+
 #### 5. Keep it Simple, Keep it elegant
 
 - Favor simplicity, avoid overengineering unless explicitly required
@@ -88,3 +100,4 @@ Rule-based, lessons learned by the Agent in a self-improvement iteration loop.
 - **Cross-platform fixes:** Before applying a fix, understand the original intent of the code — removing or changing styles/props to resolve a crash may regress other platforms. Always verify the fix holds across all targets (web, iOS, Android).
 - **Stop on repeated failure:** If a command fails twice with the same root cause, stop and diagnose — don't iterate through variations of the same broken approach.
 - **Fix broken config, don't work around it:** When something in the environment or toolchain doesn't work, fix the root cause. Never compensate with repeated workarounds at the call site — that hides the real problem and creates ongoing friction.
+- **Check platform support before using any React Native API:** APIs like `Alert`, `Share`, and `Clipboard` silently no-op on web. Before using any RN API, confirm it works on all target platforms. Tests mock the environment and will not catch silent failures — runtime verification on web is required.
