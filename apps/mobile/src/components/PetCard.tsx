@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import type { Pet } from "@pet-tracker/types";
+import { ConfirmModal } from "./ConfirmModal";
 
 interface Props {
   pet: Pet;
@@ -10,6 +11,7 @@ interface Props {
 
 export function PetCard({ pet, onDelete }: Props) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   useEffect(() => {
     fetch("https://api.thecatapi.com/v1/images/search")
@@ -36,7 +38,7 @@ export function PetCard({ pet, onDelete }: Props) {
         {onDelete && (
           <Pressable
             accessibilityLabel={`Delete ${pet.name}`}
-            onPress={onDelete}
+            onPress={() => setConfirmVisible(true)}
             className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 items-center justify-center"
           >
             <Ionicons name="trash-outline" size={16} color="#ef4444" />
@@ -50,6 +52,16 @@ export function PetCard({ pet, onDelete }: Props) {
           <Text className="text-xs text-gray-400 mt-2">Born {pet.dateOfBirth.slice(0, 10)}</Text>
         )}
       </View>
+      <ConfirmModal
+        visible={confirmVisible}
+        title="Delete pet"
+        message={`Are you sure you want to delete ${pet.name}? This action cannot be undone.`}
+        onCancel={() => setConfirmVisible(false)}
+        onConfirm={() => {
+          setConfirmVisible(false);
+          onDelete?.();
+        }}
+      />
     </View>
   );
 }

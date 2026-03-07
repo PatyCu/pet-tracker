@@ -73,10 +73,26 @@ describe("PetCard", () => {
     expect(screen.queryByLabelText("Delete Luna")).toBeNull();
   });
 
-  it("calls onDelete when the delete button is pressed", () => {
+  it("shows a confirmation modal when the delete button is pressed", () => {
+    render(<PetCard pet={basePet} onDelete={jest.fn()} />);
+    fireEvent.press(screen.getByLabelText("Delete Luna"));
+    expect(screen.getByText("Delete pet")).toBeOnTheScreen();
+    expect(screen.getByText(/Are you sure you want to delete Luna/)).toBeOnTheScreen();
+  });
+
+  it("calls onDelete when the Delete button in the modal is confirmed", () => {
     const onDelete = jest.fn();
     render(<PetCard pet={basePet} onDelete={onDelete} />);
     fireEvent.press(screen.getByLabelText("Delete Luna"));
+    fireEvent.press(screen.getByText("Delete"));
     expect(onDelete).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call onDelete when Cancel is pressed", () => {
+    const onDelete = jest.fn();
+    render(<PetCard pet={basePet} onDelete={onDelete} />);
+    fireEvent.press(screen.getByLabelText("Delete Luna"));
+    fireEvent.press(screen.getByText("Cancel"));
+    expect(onDelete).not.toHaveBeenCalled();
   });
 });
