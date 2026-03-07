@@ -47,6 +47,9 @@ coverage/
 # ESLint
 .eslintcache
 
+# Playwright MCP screenshots
+.playwright-mcp/
+
 # local AI collaboration tools
 .claude/
 .prompts/

@@ -87,3 +87,4 @@ Rule-based, lessons learned by the Agent in a self-improvement iteration loop.
 
 - **Cross-platform fixes:** Before applying a fix, understand the original intent of the code — removing or changing styles/props to resolve a crash may regress other platforms. Always verify the fix holds across all targets (web, iOS, Android).
 - **Stop on repeated failure:** If a command fails twice with the same root cause, stop and diagnose — don't iterate through variations of the same broken approach.
+- **Fix broken config, don't work around it:** When something in the environment or toolchain doesn't work, fix the root cause. Never compensate with repeated workarounds at the call site — that hides the real problem and creates ongoing friction.
