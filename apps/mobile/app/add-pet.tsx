@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import kiwiLogo from "../assets/kiwi-logo.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { CreatePetInput } from "@pet-tracker/types";
@@ -59,7 +68,10 @@ export default function AddPetScreen() {
         contentContainerClassName="items-center justify-center"
       >
         <View className="px-6 py-10">
-          <Text className="text-3xl font-bold text-lime-700 mb-2">🥝 Add a Pet</Text>
+          <View className="flex-row items-center gap-2 mb-2">
+            <Image source={kiwiLogo} style={{ width: 32, height: 32 }} />
+            <Text className="text-3xl font-bold text-lime-700">Add a Pet</Text>
+          </View>
           <Text className="text-base text-lime-950 mb-8">Tell us about your furry friend</Text>
 
           <View className="gap-5">
