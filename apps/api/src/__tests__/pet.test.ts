@@ -11,9 +11,8 @@ beforeAll(async () => {
     update: {},
     create: { id: "default-user", name: "Paty" },
   });
-  // Remove any pets left from previous test runs to ensure clean state
   await prisma.pet.deleteMany({
-    where: { userId: "default-user", name: { in: ["Kiwi", "Dupes"] } },
+    where: { userId: "default-user", name: { in: ["Kiwi", "Dupes", "ToDelete"] } },
   });
 });
 
@@ -53,5 +52,26 @@ describe("POST /api/v1/pets", () => {
     const res = await request(app).post("/api/v1/pets").send({ name: "Dupes", species: "Dog" });
     expect(res.status).toBe(409);
     expect(res.body.error).toMatch(/already exists/i);
+  });
+});
+
+describe("DELETE /api/v1/pets/:id", () => {
+  it("returns 204 and removes the pet", async () => {
+    const createRes = await request(app)
+      .post("/api/v1/pets")
+      .send({ name: "ToDelete", species: "Cat" });
+    expect(createRes.status).toBe(201);
+    const id = createRes.body.id as string;
+
+    const deleteRes = await request(app).delete(`/api/v1/pets/${id}`);
+    expect(deleteRes.status).toBe(204);
+
+    const listRes = await request(app).get("/api/v1/pets");
+    expect(listRes.body.find((p: { id: string }) => p.id === id)).toBeUndefined();
+  });
+
+  it("returns 404 for a non-existent id", async () => {
+    const res = await request(app).delete("/api/v1/pets/non-existent-id");
+    expect(res.status).toBe(404);
   });
 });

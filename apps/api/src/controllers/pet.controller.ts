@@ -11,6 +11,20 @@ export async function listPets(_req: Request, res: Response): Promise<void> {
   res.json(pets);
 }
 
+export async function deletePet(req: Request, res: Response): Promise<void> {
+  const id = req.params.id as string;
+
+  const pet = await prisma.pet.findUnique({ where: { id } });
+
+  if (!pet || pet.userId !== DEFAULT_USER_ID) {
+    res.status(404).json({ error: "Pet not found" });
+    return;
+  }
+
+  await prisma.pet.delete({ where: { id } });
+  res.status(204).send();
+}
+
 export async function createPet(req: Request, res: Response): Promise<void> {
   const { name, species, breed, dateOfBirth } = req.body as CreatePetInput;
 
