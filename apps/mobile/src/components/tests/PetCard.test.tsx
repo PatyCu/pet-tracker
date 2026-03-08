@@ -95,4 +95,32 @@ describe("PetCard", () => {
     fireEvent.press(screen.getByText("Cancel"));
     expect(onDelete).not.toHaveBeenCalled();
   });
+
+  it("calls onSelect when the card is pressed", () => {
+    const onSelect = jest.fn();
+    render(<PetCard pet={basePet} onSelect={onSelect} />);
+    fireEvent.press(screen.getByRole("button", { name: /Luna/i }));
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not call onSelect when the delete button is pressed", () => {
+    const onSelect = jest.fn();
+    render(<PetCard pet={basePet} onDelete={jest.fn()} onSelect={onSelect} />);
+    fireEvent.press(screen.getByLabelText("Delete Luna"));
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it("reflects selected state via accessibilityState", () => {
+    render(<PetCard pet={basePet} isSelected={true} />);
+    expect(screen.getByRole("button", { name: /Luna/i })).toHaveProp("accessibilityState", {
+      selected: true,
+    });
+  });
+
+  it("reflects unselected state via accessibilityState", () => {
+    render(<PetCard pet={basePet} isSelected={false} />);
+    expect(screen.getByRole("button", { name: /Luna/i })).toHaveProp("accessibilityState", {
+      selected: false,
+    });
+  });
 });

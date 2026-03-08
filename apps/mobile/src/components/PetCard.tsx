@@ -7,9 +7,11 @@ import { ConfirmModal } from "./ConfirmModal";
 interface Props {
   pet: Pet;
   onDelete?: () => void;
+  onSelect?: () => void;
+  isSelected?: boolean;
 }
 
-export function PetCard({ pet, onDelete }: Props) {
+export function PetCard({ pet, onDelete, onSelect, isSelected }: Props) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [confirmVisible, setConfirmVisible] = useState(false);
 
@@ -23,7 +25,12 @@ export function PetCard({ pet, onDelete }: Props) {
   const speciesBreed = pet.breed ? `${pet.species} · ${pet.breed}` : pet.species;
 
   return (
-    <View className="bg-white rounded-2xl overflow-hidden shadow-sm flex-1">
+    <Pressable
+      onPress={onSelect}
+      accessibilityRole="button"
+      accessibilityState={{ selected: isSelected }}
+      className={`bg-white rounded-2xl overflow-hidden shadow-sm flex-1 active:opacity-90 active:scale-[0.97] hover:shadow-md hover:scale-[1.02] ${isSelected ? "border-2 border-lime-500" : "border-2 border-transparent"}`}
+    >
       <View className="h-40 bg-lime-100 items-center justify-center">
         {imageUrl ? (
           <Image
@@ -62,6 +69,6 @@ export function PetCard({ pet, onDelete }: Props) {
           onDelete?.();
         }}
       />
-    </View>
+    </Pressable>
   );
 }

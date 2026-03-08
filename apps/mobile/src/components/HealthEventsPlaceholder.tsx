@@ -1,11 +1,19 @@
 import { Text, View } from "react-native";
+import type { Pet } from "@pet-tracker/types";
 
-export function HealthEventsPlaceholder() {
+interface Props {
+  pet?: Pet;
+}
+
+export function HealthEventsPlaceholder({ pet }: Props) {
+  const title = pet ? `${pet.name}'s Health Events` : "Upcoming Health Events";
+  const subtitle = pet ? `Showing schedule for ${pet.name}` : "Schedule for the next 7 days";
+
   return (
     <View className="bg-white rounded-2xl p-6 shadow-sm">
       <View className="mb-4">
-        <Text className="text-xl font-bold text-gray-900">Upcoming Health Events</Text>
-        <Text className="text-sm text-gray-400 mt-1">Schedule for the next 7 days</Text>
+        <Text className="text-xl font-bold text-gray-900">{title}</Text>
+        <Text className="text-sm text-gray-400 mt-1">{subtitle}</Text>
       </View>
       <View className="gap-4">
         {["Vet Checkup", "Monthly Deworming", "Grooming Appointment"].map((label) => (

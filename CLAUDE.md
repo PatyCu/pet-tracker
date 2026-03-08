@@ -1,5 +1,9 @@
 # Pet Tracker - Claude Code Guide
 
+## Project Context
+
+**Stack:** pnpm monorepo — `apps/api` (Node/Prisma/Vitest), `apps/mobile` (Expo SDK 54/Router v6/Jest), `packages/types` (shared TS types).
+
 ## Agent Instructions
 
 - Before considering any task complete, verify the project builds and runs without errors and that all quality gates pass.

@@ -12,10 +12,29 @@ import { AddPetCard } from "@/components/AddPetCard";
 import { Sidebar } from "@/components/Sidebar";
 import { HealthEventsPlaceholder } from "@/components/HealthEventsPlaceholder";
 
+function PetSkeletons() {
+  return (
+    <View className="flex-row flex-wrap gap-4">
+      <View className={Platform.OS === "web" ? "w-64" : "w-[48%]"}>
+        <PetCardSkeleton />
+      </View>
+      <View className={Platform.OS === "web" ? "w-64" : "w-[48%]"}>
+        <PetCardSkeleton />
+      </View>
+    </View>
+  );
+}
+
 export default function HomeScreen() {
   const router = useRouter();
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
+
+  const handleSelectPet = useCallback(
+    (pet: Pet) => setSelectedPet((prev) => (prev?.id === pet.id ? null : pet)),
+    [],
+  );
 
   const fetchPets = useCallback(async () => {
     try {
@@ -42,17 +61,6 @@ export default function HomeScreen() {
   }, [fetchPets]);
 
   if (loading) {
-    const skeletons = (
-      <View className="flex-row flex-wrap gap-4">
-        <View className={Platform.OS === "web" ? "w-64" : "w-[48%]"}>
-          <PetCardSkeleton />
-        </View>
-        <View className={Platform.OS === "web" ? "w-64" : "w-[48%]"}>
-          <PetCardSkeleton />
-        </View>
-      </View>
-    );
-
     if (Platform.OS === "web") {
       return (
         <View className="flex-1 flex-row">
@@ -69,7 +77,7 @@ export default function HomeScreen() {
             <Text className="text-base text-gray-500 mb-6">
               Track activity, health, and location in real-time.
             </Text>
-            {skeletons}
+            <PetSkeletons />
           </ScrollView>
         </View>
       );
@@ -82,7 +90,7 @@ export default function HomeScreen() {
             <Image source={kiwiLogo} style={{ width: 28, height: 28 }} />
             <Text className="text-2xl font-bold text-lime-700">Pet Tracker</Text>
           </View>
-          {skeletons}
+          <PetSkeletons />
         </View>
       </SafeAreaView>
     );
@@ -127,7 +135,12 @@ export default function HomeScreen() {
           <View className="flex-row flex-wrap gap-4 mb-8">
             {pets.map((pet) => (
               <View key={pet.id} className="w-64">
-                <PetCard pet={pet} onDelete={() => deletePet(pet.id)} />
+                <PetCard
+                  pet={pet}
+                  onDelete={() => deletePet(pet.id)}
+                  onSelect={() => handleSelectPet(pet)}
+                  isSelected={selectedPet?.id === pet.id}
+                />
               </View>
             ))}
             <View className="w-64">
@@ -135,7 +148,7 @@ export default function HomeScreen() {
             </View>
           </View>
           <View className="max-w-3xl">
-            <HealthEventsPlaceholder />
+            <HealthEventsPlaceholder pet={selectedPet ?? undefined} />
           </View>
         </ScrollView>
       </View>
