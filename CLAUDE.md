@@ -78,6 +78,7 @@ Skipping any item requires an explicit written justification.
 
 #### 8. Testing
 
+- **TDD is mandatory:** Write the failing test first, then implement the fix or feature to make it pass. Never write implementation code before a test exists.
 - Test files live in `tests/` directories adjacent to source files
 - Follow the **testing pyramid**: more unit tests, fewer integration, minimal E2E
 - Test **behavior and public APIs**, not implementation details

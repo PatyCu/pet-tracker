@@ -52,7 +52,7 @@ export default function AddPetScreen() {
         return;
       }
 
-      router.back();
+      router.replace("/");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
